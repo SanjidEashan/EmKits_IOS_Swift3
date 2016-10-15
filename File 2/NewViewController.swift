@@ -20,10 +20,10 @@ class NewViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func logOut(sender: AnyObject) {
+    @IBAction func logOut(_ sender: AnyObject) {
         let loginManager = FBSDKLoginManager()
         loginManager.logOut()
-        self.performSegueWithIdentifier("pp", sender: LoginViewController.self)
+        self.performSegue(withIdentifier: "pp", sender: LoginViewController.self)
         
         
         

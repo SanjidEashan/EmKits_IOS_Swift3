@@ -22,7 +22,7 @@ class RegisterViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func createAccountAction(sender: AnyObject) {
+    @IBAction func createAccountAction(_ sender: AnyObject) {
         let email = self.emailTextField.text
         let password = self.passwordTextField.text
         let repeatPassword = self.repeatPasswordTextField.text
@@ -51,18 +51,18 @@ class RegisterViewController: UIViewController {
         
         if email != "" && password != ""
         {
-            FIREBASE_REF.createUser(email, password: password, withValueCompletionBlock: { (error, authData) -> Void in
+            FIREBASE_REF?.createUser(email, password: password, withValueCompletionBlock: { (error, authData) -> Void in
                 
                 if error == nil
                 {
-                    FIREBASE_REF.authUser(email, password: password, withCompletionBlock: { error, authData in
+                    FIREBASE_REF?.authUser(email, password: password, withCompletionBlock: { error, authData in
                         
                         if error == nil
                         {
-                            NSUserDefaults.standardUserDefaults().setValue(authData.uid, forKey: "uid")
-                            NSUserDefaults.standardUserDefaults().synchronize()
+                            UserDefaults.standard.setValue(authData?.uid, forKey: "uid")
+                            UserDefaults.standard.synchronize()
                             print("Account Created :)")
-                            self.dismissViewControllerAnimated(true,completion: nil)
+                            self.dismiss(animated: true,completion: nil)
                         }
                         else
                         {
@@ -79,10 +79,10 @@ class RegisterViewController: UIViewController {
         }
         else
         {
-            let alert = UIAlertController(title: "Error", message: "Enter Email and Password.", preferredStyle: UIAlertControllerStyle.Alert)
-            let action = UIAlertAction(title: "Ok", style: .Default, handler: nil)
+            let alert = UIAlertController(title: "Error", message: "Enter Email and Password.", preferredStyle: UIAlertControllerStyle.alert)
+            let action = UIAlertAction(title: "Ok", style: .default, handler: nil)
             alert.addAction(action)
-            self.presentViewController(alert, animated: true, completion: nil)
+            self.present(alert, animated: true, completion: nil)
         }
         
         
@@ -93,15 +93,15 @@ class RegisterViewController: UIViewController {
         
     }
     
-    func displayMyAlertMessage(userMessage:String)
+    func displayMyAlertMessage(_ userMessage:String)
     {
         
-        let myAlert = UIAlertController(title:"Alert", message:userMessage, preferredStyle: UIAlertControllerStyle.Alert);
+        let myAlert = UIAlertController(title:"Alert", message:userMessage, preferredStyle: UIAlertControllerStyle.alert);
         
-        let okAction = UIAlertAction(title:"Ok", style:UIAlertActionStyle.Default, handler:nil);
+        let okAction = UIAlertAction(title:"Ok", style:UIAlertActionStyle.default, handler:nil);
         
         myAlert.addAction(okAction);
-        self.presentViewController(myAlert, animated: true, completion: nil);
+        self.present(myAlert, animated: true, completion: nil);
         
         
     }
@@ -113,30 +113,30 @@ class RegisterViewController: UIViewController {
    
     
     // Start Editing The Text Field
-    func textFieldDidBeginEditing(textField: UITextField) {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
         moveTextField(textField, moveDistance: -100, up: true)
     }
     
     // Finish Editing The Text Field
-    func textFieldDidEndEditing(textField: UITextField) {
+    func textFieldDidEndEditing(_ textField: UITextField) {
         moveTextField(textField, moveDistance: -100, up: false)
     }
     
     // Hide the keyboard when the return key pressed
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
     
     // Move the text field in a pretty animation!
-    func moveTextField(textField: UITextField, moveDistance: Int, up: Bool) {
+    func moveTextField(_ textField: UITextField, moveDistance: Int, up: Bool) {
         let moveDuration = 0.3
         let movement: CGFloat = CGFloat(up ? moveDistance : -moveDistance)
         
         UIView.beginAnimations("animateTextField", context: nil)
         UIView.setAnimationBeginsFromCurrentState(true)
         UIView.setAnimationDuration(moveDuration)
-        self.view.frame = CGRectOffset(self.view.frame, 0, movement)
+        self.view.frame = self.view.frame.offsetBy(dx: 0, dy: movement)
         UIView.commitAnimations()
     }
 

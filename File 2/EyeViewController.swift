@@ -105,14 +105,14 @@ class EyeViewController: UIViewController {
             // Dispose of any resources that can be recreated.
         }
         
-        func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+        func mapView(_ mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
             // 1
             let identifier = "Capital"
             
             // 2
-            if annotation.isKindOfClass(Capital.self) {
+            if annotation.isKind(of: Capital.self) {
                 // 3
-                var annotationView = mapView.dequeueReusableAnnotationViewWithIdentifier(identifier)
+                var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
                 
                 if annotationView == nil {
                     //4
@@ -120,8 +120,8 @@ class EyeViewController: UIViewController {
                     annotationView!.canShowCallout = true
                     
                     // 5
-                    let btn = UIButton(type: .DetailDisclosure)
-                    let btn2 = UIButton(type: .ContactAdd)
+                    let btn = UIButton(type: .detailDisclosure)
+                    let btn2 = UIButton(type: .contactAdd)
                     
                     
                     
@@ -140,14 +140,14 @@ class EyeViewController: UIViewController {
             return nil
         }
         
-        func mapView(mapView: MKMapView, annotationView: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        func mapView(_ mapView: MKMapView, annotationView: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
             
             
             if control == annotationView.rightCalloutAccessoryView
                 
             {
-                let app = UIApplication.sharedApplication()
-                app.openURL(NSURL(string: (annotationView.annotation!.subtitle!)!)!)
+                let app = UIApplication.shared
+                app.openURL(URL(string: (annotationView.annotation!.subtitle!)!)!)
                 
                 
             }
@@ -160,10 +160,10 @@ class EyeViewController: UIViewController {
                 
                 
                 
-                let ac = UIAlertController(title: placeName, message: placeInfo, preferredStyle: .Alert)
+                let ac = UIAlertController(title: placeName, message: placeInfo, preferredStyle: .alert)
                 
-                ac.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                self.presentViewController(ac, animated: true, completion: nil)
+                ac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(ac, animated: true, completion: nil)
                 
                 
                 
@@ -177,7 +177,7 @@ class EyeViewController: UIViewController {
         
         
         
-        func LocationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
+        func LocationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
         {
             let location = locations.last
             
@@ -197,22 +197,22 @@ class EyeViewController: UIViewController {
             self.locationManager.stopUpdatingLocation()
         }
         
-        func locationManager(manager: CLLocationManager, didFailWithError error: NSError)
+        func locationManager(_ manager: CLLocationManager, didFailWithError error: NSError)
         {
             print("Error: " + error.localizedDescription, terminator: "")
         }
         
 
-    @IBAction func segment(sender: AnyObject) {
+    @IBAction func segment(_ sender: AnyObject) {
         
         switch sender.selectedSegmentIndex {
             
         case 1 :
-            mapView.mapType = MKMapType.SatelliteFlyover
+            mapView.mapType = MKMapType.satelliteFlyover
         case 2 :
-            mapView.mapType = MKMapType.Hybrid
+            mapView.mapType = MKMapType.hybrid
         default:
-            mapView.mapType = MKMapType.Standard
+            mapView.mapType = MKMapType.standard
             
             
         }

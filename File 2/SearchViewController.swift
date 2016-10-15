@@ -28,7 +28,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let image = UIImage(named: "Background")!
         imageView.image = image
         self.view.addSubview(imageView)
-        self.view.sendSubviewToBack(imageView)
+        self.view.sendSubview(toBack: imageView)
         
         
         // Do any additional setup after loading the view, typically from a nib.
@@ -53,12 +53,12 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // MARK: UITableView Delegate and Datasource functions
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if shouldShowSearchResults {
             return filteredArray.count
         }
@@ -68,21 +68,21 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
         if shouldShowSearchResults {
-            cell.textLabel?.text = filteredArray[indexPath.row]
+            cell.textLabel?.text = filteredArray[(indexPath as NSIndexPath).row]
         }
         else {
-            cell.textLabel?.text = dataArray[indexPath.row]
+            cell.textLabel?.text = dataArray[(indexPath as NSIndexPath).row]
         }
         
         return cell
     }
     
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60.0
     }
     
@@ -91,14 +91,14 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func loadListOfCountries() {
         // Specify the path to the countries list file.
-        let pathToFile = NSBundle.mainBundle().pathForResource("medicines", ofType: "txt")
+        let pathToFile = Bundle.main.path(forResource: "medicines", ofType: "txt")
         
         if let path = pathToFile {
             // Load the file contents as a string.
-            let countriesString = try! String(contentsOfFile: path, encoding: NSUTF8StringEncoding)
+            let countriesString = try! String(contentsOfFile: path, encoding: String.Encoding.utf8)
             
             // Append the countries from the string to the dataArray array by breaking them using the line change character.
-            dataArray = countriesString.componentsSeparatedByString("\n")
+            dataArray = countriesString.components(separatedBy: "\n")
             
             // Reload the tableview.
             tblSearchResults.reloadData()
@@ -120,7 +120,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     
     func configureCustomSearchController() {
-        customSearchController = CustomSearchController(searchResultsController: self, searchBarFrame: CGRectMake(0.0, 0.0, tblSearchResults.frame.size.width, 50.0), searchBarFont: UIFont(name: "Futura", size: 14.0)!, searchBarTextColor: UIColor.whiteColor(), searchBarTintColor: UIColor.clearColor())
+        customSearchController = CustomSearchController(searchResultsController: self, searchBarFrame: CGRect(x: 0.0, y: 0.0, width: tblSearchResults.frame.size.width, height: 50.0), searchBarFont: UIFont(name: "Futura", size: 14.0)!, searchBarTextColor: UIColor.white, searchBarTintColor: UIColor.clear)
         
         customSearchController.customSearchBar.placeholder = "Search Medicine For Exm:Fever"
         tblSearchResults.tableHeaderView = customSearchController.customSearchBar
@@ -131,19 +131,19 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // MARK: UISearchBarDelegate functions
     
-    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         shouldShowSearchResults = true
         tblSearchResults.reloadData()
     }
     
     
-    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         shouldShowSearchResults = false
         tblSearchResults.reloadData()
     }
     
     
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if !shouldShowSearchResults {
             shouldShowSearchResults = true
             tblSearchResults.reloadData()
@@ -155,16 +155,16 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // MARK: UISearchResultsUpdating delegate function
     
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
+    func updateSearchResults(for searchController: UISearchController) {
         guard let searchString = searchController.searchBar.text else {
             return
         }
         
         // Filter the data array and get only those countries that match the search text.
         filteredArray = dataArray.filter({ (country) -> Bool in
-            let countryText:NSString = country
+            let countryText:NSString = country as NSString
             
-            return (countryText.rangeOfString(searchString, options: NSStringCompareOptions.CaseInsensitiveSearch).location) != NSNotFound
+            return (countryText.range(of: searchString, options: NSString.CompareOptions.caseInsensitive).location) != NSNotFound
         })
         
         // Reload the tableview.
@@ -191,16 +191,16 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func didTapOnCancelButton() {
         shouldShowSearchResults = false
         tblSearchResults.reloadData()
-        self.performSegueWithIdentifier("cc", sender: NewViewController.self)
+        self.performSegue(withIdentifier: "cc", sender: NewViewController.self)
     }
     
     
-    func didChangeSearchText(searchText: String) {
+    func didChangeSearchText(_ searchText: String) {
         // Filter the data array and get only those countries that match the search text.
         filteredArray = dataArray.filter({ (country) -> Bool in
-            let countryText: NSString = country
+            let countryText: NSString = country as NSString
             
-            return (countryText.rangeOfString(searchText, options: NSStringCompareOptions.CaseInsensitiveSearch).location) != NSNotFound
+            return (countryText.range(of: searchText, options: NSString.CompareOptions.caseInsensitive).location) != NSNotFound
         })
         
         // Reload the tableview.

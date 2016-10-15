@@ -20,7 +20,7 @@ class AddHosViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func submitHospital(sender: AnyObject) {
+    @IBAction func submitHospital(_ sender: AnyObject) {
         
         let email = self.hosName.text
         let password = self.hosPhone.text
@@ -47,15 +47,15 @@ class AddHosViewController: UIViewController {
     }
 
     
-    func displayMyAlertMessage(userMessage:String)
+    func displayMyAlertMessage(_ userMessage:String)
     {
         
-        let myAlert = UIAlertController(title:"Confirmation", message:userMessage, preferredStyle: UIAlertControllerStyle.Alert);
+        let myAlert = UIAlertController(title:"Confirmation", message:userMessage, preferredStyle: UIAlertControllerStyle.alert);
         
-        let okAction = UIAlertAction(title:"Ok", style:UIAlertActionStyle.Default, handler:nil);
+        let okAction = UIAlertAction(title:"Ok", style:UIAlertActionStyle.default, handler:nil);
         
         myAlert.addAction(okAction);
-        self.presentViewController(myAlert, animated: true, completion:nil);
+        self.present(myAlert, animated: true, completion:nil);
         
         
         
@@ -69,30 +69,30 @@ class AddHosViewController: UIViewController {
     
     
     // Start Editing The Text Field
-    func textFieldDidBeginEditing(textField: UITextField) {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
         moveTextField(textField, moveDistance: -150, up: true)
     }
     
     // Finish Editing The Text Field
-    func textFieldDidEndEditing(textField: UITextField) {
+    func textFieldDidEndEditing(_ textField: UITextField) {
         moveTextField(textField, moveDistance: -150, up: false)
     }
     
     // Hide the keyboard when the return key pressed
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
     
     // Move the text field in a pretty animation!
-    func moveTextField(textField: UITextField, moveDistance: Int, up: Bool) {
+    func moveTextField(_ textField: UITextField, moveDistance: Int, up: Bool) {
         let moveDuration = 0.3
         let movement: CGFloat = CGFloat(up ? moveDistance : -moveDistance)
         
         UIView.beginAnimations("animateTextField", context: nil)
         UIView.setAnimationBeginsFromCurrentState(true)
         UIView.setAnimationDuration(moveDuration)
-        self.view.frame = CGRectOffset(self.view.frame, 0, movement)
+        self.view.frame = self.view.frame.offsetBy(dx: 0, dy: movement)
         UIView.commitAnimations()
     }
     
